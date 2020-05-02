@@ -13,6 +13,7 @@ const Body: React.FC = () => {
   const [songId, setSongId] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [artist, setArtist] = useState<string>('');
+  const [notFound, setNotFound] = useState<boolean>(false);
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue: string = event.target.value;
@@ -24,9 +25,12 @@ const Body: React.FC = () => {
       .then((res) => res.text())
       .then((res) => {
         const trackObject = JSON.parse(res);
-        if (res.length > 0) {
+        if (trackObject.length > 0) {
+          setNotFound(false);
           setArtist(trackObject[0].artist);
           setTitle(trackObject[0].title);
+        } else {
+          setNotFound(true);
         }
       });
   };
@@ -52,22 +56,24 @@ const Body: React.FC = () => {
             />
             <Button handleClick={getTrackById} buttonLabel='Search' />
             <br />
-            {/* <Input
+            <Input
               handleChange={onInputChange}
               inputValue={songId}
               inputLabel='Search by Artist'
-            /> */}
+            />
             <p className='text-white-75 font-weight-light mb-5'>
-              {artist ? (
+              {/* if not found dispaly somethings saying */}
+              {artist && !notFound ? (
                 <div>
-                  <p>Artist: </p>
-                  <span className='text-primary'>{artist}</span>
-                  <p>Song Title: </p>
-                  <span className='text-primary'>{title}</span>
+                  Artist:
+                  <span className='text-primary padding-right'> {artist}</span>
+                  Song Title:
+                  <span className='text-primary'> {title}</span>
                 </div>
               ) : (
                 ''
               )}
+              {notFound && <p>Track not found</p>}
             </p>
           </div>
         </div>
