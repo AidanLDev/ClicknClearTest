@@ -11,13 +11,21 @@ interface trackObject {
 
 const Body: React.FC = () => {
   const [songId, setSongId] = useState<string>('');
+  const [searchedSong, setSearchedSong] = useState<string>('');
   const [title, setTitle] = useState<string>('');
+  const [titles, setTitles] = useState<string[]>([]);
   const [artist, setArtist] = useState<string>('');
   const [notFound, setNotFound] = useState<boolean>(false);
 
-  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue: string = event.target.value;
     setSongId(inputValue);
+  };
+
+  // TODO: Change this into one handleInput function that checks eve
+  const onArtistChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue: string = event.target.value;
+    setSearchedSong(inputValue);
   };
 
   const getTrackById = () => {
@@ -29,9 +37,26 @@ const Body: React.FC = () => {
           setNotFound(false);
           setArtist(trackObject[0].artist);
           setTitle(trackObject[0].title);
+          setTitles([]);
         } else {
           setNotFound(true);
         }
+      });
+  };
+
+  const getTracksByArtist = () => {
+    fetch(`http://localhost:3001/songs/${searchedSong}`)
+      .then((res) => res.text())
+      .then((res) => {
+        const trackObject = JSON.parse(res);
+        if (trackObject.length > 0) {
+          setNotFound(false);
+          setArtist(trackObject[0].artist);
+          // For each trackobject push into setTitles array
+        } else {
+          setNotFound(true);
+        }
+        // setArtist(trackObject);
       });
   };
 
@@ -50,16 +75,20 @@ const Body: React.FC = () => {
               Search our music catalog
             </p>
             <Input
-              handleChange={onInputChange}
+              handleChange={onIdChange}
               inputValue={songId}
               inputLabel='Search by track ID'
             />
-            <Button handleClick={getTrackById} buttonLabel='Search' />
+            <Button handleClick={getTrackById} buttonLabel='Search by Id' />
             <br />
             <Input
-              handleChange={onInputChange}
-              inputValue={songId}
+              handleChange={onArtistChange}
+              inputValue={searchedSong}
               inputLabel='Search by Artist'
+            />
+            <Button
+              handleClick={getTracksByArtist}
+              buttonLabel='Search by artist'
             />
             <p className='text-white-75 font-weight-light mb-5'>
               {/* if not found dispaly somethings saying */}
@@ -68,7 +97,10 @@ const Body: React.FC = () => {
                   Artist:
                   <span className='text-primary padding-right'> {artist}</span>
                   Song Title:
-                  <span className='text-primary'> {title}</span>
+                  <span className='text-primary'>
+                    {' '}
+                    {titles.length > 0 ? titles : title}
+                  </span>
                 </div>
               ) : (
                 ''
