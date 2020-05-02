@@ -50,8 +50,13 @@ const Body: React.FC = () => {
       .then((res) => {
         const trackObject = JSON.parse(res);
         if (trackObject.length > 0) {
+          const titlesArray: string[] = [];
+          trackObject.forEach((track: { title: any }) => {
+            titlesArray.push(track.title + ', ');
+          });
           setNotFound(false);
           setArtist(trackObject[0].artist);
+          setTitles(titlesArray);
           // For each trackobject push into setTitles array
         } else {
           setNotFound(true);
