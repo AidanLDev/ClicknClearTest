@@ -9,7 +9,10 @@ interface Props {
 const Input: React.FC<Props> = ({ inputValue, handleChange, inputLabel }) => {
   return (
     <>
-      <label htmlFor={inputLabel} className='text-primary padding-right'>
+      <label
+        htmlFor={inputLabel}
+        className='text-primary padding-right padding-left'
+      >
         {inputLabel}
       </label>
       <input
