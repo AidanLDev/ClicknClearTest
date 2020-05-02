@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import Header from '../components/ui/Header';
+import Body from '../components/ui/Body';
 
 const Home = () => {
   const [APIRes, setAPIRes] = useState('');
@@ -10,14 +10,13 @@ const Home = () => {
   }, []);
 
   const callAPI = () => {
-    fetch('http://localhost:3001/testAPI')
+    fetch('http://localhost:3001/song/44')
       .then((res) => res.text())
       .then((res) => setAPIRes(res));
   };
   return (
     <>
-      <p>{APIRes}</p>
-      <Header />
+      <Body song={APIRes} />
     </>
   );
 };

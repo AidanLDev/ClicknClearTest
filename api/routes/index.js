@@ -1,9 +1,11 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const musicController = require('../controller/music');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+//  GET /songs
+router.get('/songs', musicController.getAllSongs);
+
+// GET /song/:songId
+router.get('/song/:songId', musicController.getSongById);
 
 module.exports = router;
