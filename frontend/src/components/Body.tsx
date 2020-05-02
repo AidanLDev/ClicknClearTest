@@ -11,7 +11,6 @@ interface trackObject {
 
 const Body: React.FC = () => {
   const [songId, setSongId] = useState<string>('');
-  const [trackById, setTrackById] = useState<any>([]);
   const [title, setTitle] = useState<string>('');
   const [artist, setArtist] = useState<string>('');
 
@@ -23,16 +22,13 @@ const Body: React.FC = () => {
   const getTrackById = () => {
     fetch(`http://localhost:3001/song/${songId}`)
       .then((res) => res.text())
-      .then((res) => setTrackById(JSON.parse(res)));
-
-    if (trackById.length > 0) {
-      const track: {
-        artist: string;
-        title: string;
-      } = trackById[0];
-      setArtist(track.artist);
-      setTitle(track.title);
-    }
+      .then((res) => {
+        const trackObject = JSON.parse(res);
+        if (res.length > 0) {
+          setArtist(trackObject[0].artist);
+          setTitle(trackObject[0].title);
+        }
+      });
   };
 
   return (
@@ -56,13 +52,13 @@ const Body: React.FC = () => {
             />
             <Button handleClick={getTrackById} buttonLabel='Search' />
             <br />
-            <Input
+            {/* <Input
               handleChange={onInputChange}
               inputValue={songId}
               inputLabel='Search by Artist'
-            />
+            /> */}
             <p className='text-white-75 font-weight-light mb-5'>
-              {trackById.length > 0 ? (
+              {artist ? (
                 <div>
                   <p>Artist: </p>
                   <span className='text-primary'>{artist}</span>
