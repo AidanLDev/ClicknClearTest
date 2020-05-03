@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 
-import Input from './Input';
-import Button from './Button';
+import Input from './ui/Input';
+import Button from './ui/Button';
+import List from './ui/List';
+import Heading from './Heading';
 
 interface trackObject {
   artist: string;
@@ -52,16 +54,14 @@ const Body: React.FC = () => {
         if (trackObject.length > 0) {
           const titlesArray: string[] = [];
           trackObject.forEach((track: { title: any }) => {
-            titlesArray.push(track.title + ', ');
+            titlesArray.push(track.title);
           });
           setNotFound(false);
           setArtist(trackObject[0].artist);
           setTitles(titlesArray);
-          // For each trackobject push into setTitles array
         } else {
           setNotFound(true);
         }
-        // setArtist(trackObject);
       });
   };
 
@@ -69,12 +69,7 @@ const Body: React.FC = () => {
     <div className='masthead'>
       <div className='container h-100'>
         <div className='row h-100 align-items-center justify-content-center text-center'>
-          <div className='col-lg-10 align-self-end'>
-            <h1 className='text-uppercase text-white font-weight-bold'>
-              Click'n'Clear
-            </h1>
-            <hr className='divider my-4' />
-          </div>
+          <Heading headingText="Click'n'Clear" />
           <div className='col-lg-8 align-self-baseline'>
             <p className='text-white-75 font-weight-light mb-5'>
               Search our music catalog
@@ -95,23 +90,26 @@ const Body: React.FC = () => {
               handleClick={getTracksByArtist}
               buttonLabel='Search by artist'
             />
-            <p className='text-white-75 font-weight-light mb-5'>
-              {/* if not found dispaly somethings saying */}
+            <div className='text-white-75 font-weight-light mb-5'>
               {artist && !notFound ? (
                 <div>
                   Artist:
-                  <span className='text-primary padding-right'> {artist}</span>
-                  Song Title:
+                  <p className='text-primary padding-right'> {artist}</p>
+                  {titles.length > 1 ? 'Song Titles: ' : 'Song Title: '}
                   <span className='text-primary'>
                     {' '}
-                    {titles.length > 0 ? titles : title}
+                    {titles.length > 1 ? (
+                      <List listItems={titles} />
+                    ) : (
+                      title || titles
+                    )}
                   </span>
                 </div>
               ) : (
                 ''
               )}
               {notFound && <p>Track not found</p>}
-            </p>
+            </div>
           </div>
         </div>
       </div>
