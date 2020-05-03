@@ -77,7 +77,7 @@ const Body: React.FC = () => {
             <Input
               handleChange={onIdChange}
               inputValue={songId}
-              inputLabel='Search by track ID'
+              inputLabel='Search by Id'
             />
             <Button handleClick={getTrackById} buttonLabel='Search by Id' />
             <br />
